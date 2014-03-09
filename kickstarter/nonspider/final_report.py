@@ -8,6 +8,7 @@ from __future__ import division
 # Correlation of each feature to epic feature, based on binary incidence
 #   Binary because: Low incidence levels may be noise, and I don't expect any incidence to go above 4-5.
 #   Any present feature may be indicative of a bad writeup/game, but I want to know if the way they are bad is related (correlated).
+# Coincidence of each feature to epic feature
 # Projects vs # features present, to see how many projects have no features
 
 import datetime

@@ -107,7 +107,7 @@ for project in db_iterate:
                 if test_set(project['id'], shingle, original_shingle, setname):
                     counts[setname] += 1
 
-        # Limit to 4-shingles
+        # Arbitrarily limit to 4-shingles - should be sufficient for most  titles
         while len(aggregate) >= 4:
             original_aggregate.pop(0)
             aggregate.pop(0)

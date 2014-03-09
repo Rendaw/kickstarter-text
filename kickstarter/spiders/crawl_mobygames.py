@@ -14,7 +14,6 @@ class MobySpider(Spider):
     allowed_domains = ['mobygames.com']
     delay = 30
     start_urls = ['http://www.mobygames.com/browse/games/offset,0/so,0a/list-games/']
-    settings = None
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -28,13 +27,10 @@ class MobySpider(Spider):
         common.dump_response(self.settings, response)
         sel = Selector(response)
 
-        #items = []
         for game_title in sel.xpath('//table[@id="mof_object_list"]//a[contains(@href, "/game/")]/text()'):
             item = MobyItem()
             item['value'] = game_title.extract()
             yield item
-            #items.append(item)
-        #return items
 
         for pagination_links in sel.xpath('//div[@class="mobFooter"]'):
             for link in pagination_links.xpath('.//a/@href'):

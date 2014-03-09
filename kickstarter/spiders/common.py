@@ -1,6 +1,8 @@
 import os
 import errno
 
+# Routines shared between scrapers
+
 # From http://stackoverflow.com/questions/273192/check-if-a-directory-exists-and-create-it-if-necessary/5032238#5032238
 def ensure_path(path):
     try:

@@ -60,7 +60,7 @@ class KickstarterSpider(Spider):
         item['goal'] = float(json['goal'])
         item['date'] = int(json['deadline'])
 
-        # Remove html tags from description here since we're in the scrapy context and thus have relevant utilities
+        # Remove html tags from description here since we're in the scrapy context and have relevant utilities
         item['rawtext'] = ' '.join(map(
             lambda sel: sel.extract(),
             sel.xpath('//div[@class="full-description"]//text()')

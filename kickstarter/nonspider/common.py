@@ -1,6 +1,8 @@
 import sqlite3
 import string
 
+# Shared routines for non-spider activities, also used by export pipeline.
+
 def connect_db():
     connection = sqlite3.connect('kickstarter.sqlite3')
     connection.execute('CREATE TABLE IF NOT EXISTS rawnames (value TEXT PRIMARY KEY)')
