@@ -56,7 +56,7 @@ for feature in features.values():
     feature['incidence_count'] = 0
     feature['epic_correlation_pairs'] = []
 
-time_bucket_count = 20
+time_bucket_count = 10
 time_bucket_size = (newest - oldest) / time_bucket_count 
 time_buckets = [{
     'start': oldest + index * time_bucket_size,
@@ -67,7 +67,7 @@ time_buckets = [{
 feature_counts = [0] * (len(features) + 1)
 
 for project in db_iterate.execute('SELECT * FROM projects'):
-    time_bucket = next(bucket for bucket in time_buckets if project['date'] >= bucket['start'])
+    time_bucket = next(bucket for bucket in reversed(time_buckets) if project['date'] >= bucket['start'])
     time_bucket['count'] += 1
 
     # Count features over thresholds
@@ -118,25 +118,24 @@ for feature in features.values():
         100 * together / individually
     ))
 
-absolute_graph = pygal.Line()
+absolute_graph = pygal.Line(x_label_rotation = 20)
 absolute_graph.title = 'Projects with features by date'
-absolute_graph.x_labels = (format_time(bucket['start']) for bucket in time_buckets)
-absolute_graph.add('Totals', (bucket['count'] for bucket in time_buckets))
+absolute_graph.x_labels = [format_time(bucket['start']) for bucket in time_buckets]
+absolute_graph.add('Totals', [bucket['count'] for bucket in time_buckets])
 for feature in features.items():
     absolute_graph.add(
         feature[1]['description'], 
-        (bucket['feature_count'][feature[0]] for bucket in time_buckets)
+        [bucket['feature_count'][feature[0]] for bucket in time_buckets]
     )
 absolute_graph.render_to_file('features_absolute.svg')
 
-percent_graph = pygal.Line()
-percent_graph.title = 'Projects with features (%) by date'
-percent_graph.x_labels = (format_time(bucket['start']) for bucket in time_buckets)
-percent_graph.add('Totals', (bucket['count'] for bucket in time_buckets))
+percent_graph = pygal.Line(x_label_rotation = 20)
+percent_graph.title = 'Projects with features by date (in %)'
+percent_graph.x_labels = [format_time(bucket['start']) for bucket in time_buckets]
 for feature in features.items():
     percent_graph.add(
         feature[1]['description'], 
-        (((bucket['feature_count'][feature[0]] / bucket['count']) if bucket['count'] > 0 else 0) for bucket in time_buckets)
+        [(int(100 * (bucket['feature_count'][feature[0]] / bucket['count'])) if bucket['count'] > 0 else None) for bucket in time_buckets]
     )
 percent_graph.render_to_file('features_percent.svg')
 
